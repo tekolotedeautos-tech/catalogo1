@@ -228,7 +228,7 @@ input[type=file]{display:none}
 
 /* ── QUIÉNES SOMOS MODAL ── */
 .btn-quienes{
-  margin-left:auto;padding:5px 18px;border-radius:20px;
+  padding:5px 18px;border-radius:20px;
   border:1.5px solid var(--azul);background:var(--azul);
   color:#fff;font-family:'Archivo',sans-serif;
   font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;
@@ -340,6 +340,8 @@ input[type=file]{display:none}
 </div>
 
 <div class="filters">
+  <button class="btn-quienes" onclick="openQS()">&#9432; ¿Quiénes somos?</button>
+  <div class="sep"></div>
   <span class="fl">Ver:</span>
   <button class="f on" data-f="all" onclick="applyFilter('all',this)">Todos</button>
   <div class="sep"></div>
@@ -350,8 +352,6 @@ input[type=file]{display:none}
   <button class="f" data-f="TRABAJO" onclick="applyFilter('TRABAJO',this)">Trabajo pesado</button>
   <button class="f" data-f="TRAILER" onclick="applyFilter('TRAILER',this)">Trailer</button>
   <button class="f" data-f="VENDIDO" onclick="applyFilter('VENDIDO',this)">Vendidos</button>
-  <div class="sep"></div>
-  <button class="btn-quienes" onclick="openQS()">&#9432; ¿Quiénes somos?</button>
 </div>
 
 <p class="page-tagline">Inventario actualizado · TekoLote de Autos · Cuernavaca, Morelos</p>
