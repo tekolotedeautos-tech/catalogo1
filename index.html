@@ -81,6 +81,8 @@ button.f.on-b{background:var(--azul);color:#fff;border-color:var(--azul)}
 }
 .b-inv{background:var(--verde);color:var(--crema)}
 .b-proc{background:var(--naranja);color:#fff}
+.b-vend{background:#222;color:#fff}
+button.f.on-v{background:#222;color:#fff;border-color:#222}
 
 /* ── GALLERY ── */
 .gallery{position:relative;height:240px;background:var(--bg);overflow:hidden;cursor:pointer}
@@ -255,6 +257,7 @@ input[type=file]{display:none}
   <button class="f" data-f="COMERCIAL" onclick="applyFilter('COMERCIAL',this)">Comercial</button>
   <button class="f" data-f="TRABAJO" onclick="applyFilter('TRABAJO',this)">Trabajo pesado</button>
   <button class="f" data-f="TRAILER" onclick="applyFilter('TRAILER',this)">Trailer</button>
+  <button class="f" data-f="VENDIDO" onclick="applyFilter('VENDIDO',this)">Vendidos</button>
 </div>
 
 <p class="page-tagline">Inventario actualizado · TekoLote de Autos · Cuernavaca, Morelos</p>
@@ -391,7 +394,13 @@ function loadFallback(){
     {nombre:'Ford Mustang 2017',tipo:'COMERCIAL',estado:'EN INVENTARIO',precio:288000,semana:'Sem 49/25',dias:'180',fb:'',notas:'Coupe V6 · Automático · RWD',key:'ford-mustang-2017',specs:SPECS['mustang 2017']},
     {nombre:'Dodge Durango 2014 SXT',tipo:'COMERCIAL',estado:'EN INVENTARIO',precio:200000,semana:'Sem 18/26',dias:'30',fb:'https://www.facebook.com/photo/?fbid=122186245100902299',notas:'AWD · 7 pasajeros · Rines negros · Pantalla Android',key:'dodge-durango-2014-sxt',specs:SPECS['durango 2014']},
     {nombre:'F350 XLT 2018 DRW',tipo:'TRABAJO',estado:'EN INVENTARIO',precio:500000,semana:'Sem 22/26',dias:'5',fb:'https://www.facebook.com/photo/?fbid=122187575972902299',notas:'Diésel · 4×4 · Doble llanta',key:'f350-xlt-2018',specs:SPECS['f350 xlt 2018']},
-    {nombre:'Freightliner M2 2018 + Plataforma',tipo:'TRABAJO',estado:'EN PROCESO',precio:750000,semana:'Sem 14/26',dias:'60',fb:'https://www.facebook.com/photo/?fbid=122187553220902299',notas:'Importado USA · en trámites Toluca',key:'freightliner-m2-2018',specs:SPECS['m2 2018']},
+    {nombre:'Freightliner M2 2018 + Plataforma',tipo:'TRABAJO',estado:'EN PROCESO',precio:750000,semana:'Sem 14/26',dias:'60',fb:'https://www.facebook.com/photo/?fbid=122187553220902299',notas:'Importado USA · en trámites Toluca',key:'freightliner-m2-2018',specs:SPECS['m2 2018']},,
+    {nombre:'Ford Expedition Limited 2017',tipo:'COMERCIAL',estado:'VENDIDO',precio:0,semana:'',dias:'',fb:'',notas:'SUV · Full · 4×4 · V8 · 7 pasajeros',key:'expedition-2017',specs:{motor:'5.4L V8',hp:'310 hp',trans:'Automática',traccion:'4×4',combustible:'Gasolina',carroceria:'SUV 7 pax'}},
+    {nombre:'Mini Cooper S 2017',tipo:'COMERCIAL',estado:'VENDIDO',precio:0,semana:'',dias:'',fb:'',notas:'Turbo · Hatchback · Manual',key:'mini-cooper-s-2017',specs:{motor:'2.0L Turbo',hp:'189 hp',trans:'Manual 6 vel.',traccion:'FWD',combustible:'Gasolina',carroceria:'Hatchback'}},
+    {nombre:'Freightliner 2017',tipo:'TRABAJO',estado:'VENDIDO',precio:0,semana:'',dias:'',fb:'',notas:'Tractocamión importado USA',key:'freightliner-2017',specs:{motor:'Detroit DD15',hp:'505 hp',trans:'Automática',traccion:'6×4',combustible:'Diésel',carroceria:'Tractocamión'}},
+    {nombre:'Freightliner 2016',tipo:'TRABAJO',estado:'VENDIDO',precio:0,semana:'',dias:'',fb:'',notas:'Tractocamión importado USA',key:'freightliner-2016',specs:{motor:'Detroit DD13',hp:'450 hp',trans:'Automática',traccion:'6×4',combustible:'Diésel',carroceria:'Tractocamión'}},
+    {nombre:'F350 2015',tipo:'TRABAJO',estado:'VENDIDO',precio:0,semana:'',dias:'',fb:'',notas:'Diésel · 4×4 · Cabina sencilla',key:'f350-2015',specs:{motor:'6.7L Power Stroke',hp:'440 hp',trans:'TorqShift 6 vel.',traccion:'4×4',combustible:'Diésel',carroceria:'Pickup'}},
+    {nombre:'Ford Transit 2022',tipo:'TRABAJO',estado:'VENDIDO',precio:0,semana:'',dias:'',fb:'',notas:'Carga · Van de trabajo · Importada',key:'ford-transit-2022',specs:{motor:'3.5L EcoBoost',hp:'310 hp',trans:'Automática 10 vel.',traccion:'RWD',combustible:'Gasolina',carroceria:'Van de carga'}},
   ];
   buildAdminSelect(); renderAll();
 }
@@ -404,7 +413,7 @@ function fmtMXN(n){
 }
 
 function updateStats(){
-  const vis=filter==='all'?vehicles:vehicles.filter(v=>v.estado===filter||v.tipo===filter);
+  const vis=filter==='all'?vehicles.filter(v=>v.estado!=='VENDIDO'):filter==='VENDIDO'?vehicles.filter(v=>v.estado==='VENDIDO'):vehicles.filter(v=>(v.estado===filter||v.tipo===filter)&&v.estado!=='VENDIDO');
   document.getElementById('hUnits').textContent=vis.length;
   const tot=vis.reduce((s,v)=>s+v.precio,0);
   document.getElementById('hVal').textContent=tot>=1e6?'$'+(tot/1e6).toFixed(2)+'M':'$'+tot.toLocaleString('es-MX');
@@ -414,7 +423,7 @@ function updateStats(){
 function applyFilter(f,btn){
   filter=f;
   document.querySelectorAll('button.f').forEach(b=>b.classList.remove('on','on-n','on-b'));
-  btn.classList.add(f==='EN PROCESO'?'on-n':f==='TRAILER'?'on-b':'on');
+  btn.classList.add(f==='EN PROCESO'?'on-n':f==='TRAILER'?'on-b':f==='VENDIDO'?'on-v':'on');
   renderAll();
 }
 
@@ -422,7 +431,7 @@ function renderAll(){
   updateStats();
   const grid=document.getElementById('grid');
   const empty=document.getElementById('emptyMsg');
-  let list=filter==='all'?vehicles:vehicles.filter(v=>v.estado===filter||v.tipo===filter);
+  let list=filter==='all'?vehicles.filter(v=>v.estado!=='VENDIDO'):filter==='VENDIDO'?vehicles.filter(v=>v.estado==='VENDIDO'):vehicles.filter(v=>(v.estado===filter||v.tipo===filter)&&v.estado!=='VENDIDO');
   if(!list.length){grid.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
   grid.innerHTML=list.map(cardHTML).join('');
@@ -469,7 +478,7 @@ function cardHTML(v){
     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>FB</a>`:'';
 
   return `<div class="card">
-    <span class="estado-badge ${v.estado==='EN INVENTARIO'?'b-inv':'b-proc'}">${v.estado}</span>
+    <span class="estado-badge ${v.estado==='EN INVENTARIO'?'b-inv':v.estado==='VENDIDO'?'b-vend':'b-proc'}">${v.estado==='VENDIDO'?'✓ VENDIDO':v.estado}</span>
     <div class="gallery">${imgContent}</div>
     ${thumbsHTML}
     <div class="card-body">
