@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TekoLote de Autos — Catálogo</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -371,7 +373,7 @@ async function fetchSheet(){
     setSync(`Actualizado ${now}`, 'ok');
   }catch(e){
     setSync('Catálogo local · '+new Date().toLocaleDateString('es-MX'),'err');
-    if(!vehicles.length) loadFallback();
+    loadFallback();
   }
   setTimeout(fetchSheet, 5*60*1000);
 }
@@ -396,12 +398,13 @@ function parseSheet(rows){
     if(!row||row.length<3)continue;
     const nombre=(row[iN]||'').trim(),tipo=(row[iT]||'').trim().toUpperCase(),estado=(row[iE]||'').trim().toUpperCase();
     if(!nombre||!estado)continue;
-    if(!estado.includes('INVENTARIO')&&!estado.includes('PROCESO'))continue;
+    if(!nombre)continue;
     list.push({nombre,tipo,estado:estado.includes('PROCESO')?'EN PROCESO':'EN INVENTARIO',
       precio:parseMXN(row[iP]),semana:row[iS]||'',dias:row[iD]||'',
       fb:row[iFB]||'',notas:row[iNt]||'',fechaCompra:row[iFC]||'',
       key:slugify(nombre),specs:getSpecs(nombre)});
   }
+  if(!list.length){loadFallback();return;}
   vehicles=list; buildAdminSelect(); renderAll();
 }
 
